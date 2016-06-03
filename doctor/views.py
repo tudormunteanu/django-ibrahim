@@ -6,6 +6,7 @@ from rest_framework.parsers import JSONParser
 from .models import Doctor
 from .forms import DoctorForm
 from .serializers import DoctorSerializer
+from django.http import Http404
 
 
 
@@ -67,69 +68,66 @@ def doctor(request, doctor_id):
 
 	return render(request, 'doctor/doctor.html', {'doctor': doctor})
 
+@csrf_exempt   
+def doctor_list(request):
+    """
+    List all code snippets, or create a new snippet.
+    """
+    if request.method == 'GET':
+        doctors = Doctor.objects.all()
+        serializer = DoctorSerializer(doctors, many=True)
+        return JSONResponse(serializer.data)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = DoctorSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JSONResponse(serializer.data, status=201)
+        return JSONResponse(serializer.errors, status=400)
+
+@csrf_exempt
+def doctor_detail(request, pk):
+    """
+    Retrieve, update or delete a code snippet.
+    """
+    try:
+        doctor = Doctor.objects.get(pk=pk)
+    except Doctor.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = DoctorSerializer(doctor)
+        return JSONResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = DoctorSerializer(doctor, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JSONResponse(serializer.data)
+        return JSONResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        doctor.delete()
+        return HttpResponse(status=204)
+
+
+
+
+
+
+
+
+
+
+
 
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
     """
     def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
-
-	@csrf_exempt
-	def doctor_list(request):
-	    """
-	    List all code snippets, or create a new snippet.
-	    """
-	    if request.method == 'GET':
-	        doctors = Doctor.objects.all()
-	        serializer = DoctorSerializer(doctors, many=True)
-	        return JSONResponse(serializer.data)
-
-	    elif request.method == 'POST':
-	        data = JSONParser().parse(request)
-	        serializer = DoctorSerializer(data=data)
-	        if serializer.is_valid():
-	            serializer.save()
-	            return JSONResponse(serializer.data, status=201)
-	        return JSONResponse(serializer.errors, status=400)
-
-
-	@csrf_exempt
-	def doctor_detail(request, pk):
-	    """
-	    Retrieve, update or delete a code snippet.
-	    """
-	    try:
-	        doctor = Doctor.objects.get(pk=pk)
-	    except Doctor.DoesNotExist:
-	        return HttpResponse(status=404)
-
-	    if request.method == 'GET':
-	        serializer = DoctorSerializer(snippet)
-	        return JSONResponse(serializer.data)
-
-	    elif request.method == 'PUT':
-	        data = JSONParser().parse(request)
-	        serializer = DoctorSerializer(doctor, data=data)
-	        if serializer.is_valid():
-	            serializer.save()
-	            return JSONResponse(serializer.data)
-	        return JSONResponse(serializer.errors, status=400)
-
-	    elif request.method == 'DELETE':
-	        doctor.delete()
-	        return HttpResponse(status=204)
-
-
-
-
-
-
-
-
-
-
-
-
+      content = JSONRenderer().render(data)
+      kwargs['content_type'] = 'application/json'
+      super(JSONResponse, self).__init__(content, **kwargs)
