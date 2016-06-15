@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+from rest_framework.response import Response
 from .models import Doctor
 from .forms import DoctorForm
 from .serializers import DoctorSerializer
@@ -86,18 +88,19 @@ def doctor(request, doctor_id):
 	return render(request, 'doctor/doctor.html', {'doctor': doctor})
 
 
-#~~~ API starts here ~~~#
+ # API starts here 
 
-# class JSONResponse(HttpResponse): (what is this for????) <----
-#     """
-#     An HttpResponse that renders its content into JSON.
-#     """
-#     def __init__(self, data, **kwargs):
-#         content = JSONRenderer().render(data)
-#         kwargs['content_type'] = 'application/json'
-#         super(JSONResponse, self).__init__(content, **kwargs)
+class JSONResponse(HttpResponse): #(what is this for????) <----
+     """
+     An HttpResponse that renders its content into JSON.
+     """
+     def __init__(self, data, **kwargs):
+         content = JSONRenderer().render(data)
+         kwargs['content_type'] = 'application/json'
+         super(JSONResponse, self).__init__(content, **kwargs)
 
 @csrf_exempt   
+@api_view(['GET', 'POST'])
 def doctor_list(request):
     """
     List all code snippets, or create a new snippet.
@@ -105,15 +108,15 @@ def doctor_list(request):
     if request.method == 'GET':
         doctors = Doctor.objects.all()
         serializer = DoctorSerializer(doctors, many=True)
-        return JSONResponse(serializer.data)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
+        data = JsonParser().parse(request)
         serializer = DoctorSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return JSONResponse(serializer.data, status=201)
-        return JSONResponse(serializer.errors, status=400)
+        return JsonResponse(serializer.errors, status=400)
 
 @csrf_exempt
 def doctor_detail(request, pk):
@@ -127,15 +130,15 @@ def doctor_detail(request, pk):
 
     if request.method == 'GET':
         serializer = DoctorSerializer(doctor)
-        return JSONResponse(serializer.data)
+        return JsonResponse(serializer.data)
 
     elif request.method == 'PUT':
-        data = JSONParser().parse(request)
+        data = JsonParser().parse(request)
         serializer = DoctorSerializer(doctor, data=data)
         if serializer.is_valid():
             serializer.save()
-            return JSONResponse(serializer.data)
-        return JSONResponse(serializer.errors, status=400)
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
 
     elif request.method == 'DELETE':
         doctor.delete()
