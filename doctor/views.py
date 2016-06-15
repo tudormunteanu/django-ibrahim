@@ -119,9 +119,10 @@ def doctor_list(request):
         return JsonResponse(serializer.errors, status=400)
 
 @csrf_exempt
+@api_view(['GET', 'POST'])
 def doctor_detail(request, pk):
     """
-    Retrieve, update or delete a code snippet.
+    Retrieve information on one doctor
     """
     try:
         doctor = Doctor.objects.get(pk=pk)
