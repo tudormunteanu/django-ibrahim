@@ -29,6 +29,7 @@ class DoctorFormTestCase(TestCase):
 		self.assertEqual(doctor.email, "Aanderson@gmail.com")
 
 
+
 	def test_get_doctors(self):
 		""" Getting doctors from a populated database """
 
@@ -44,10 +45,13 @@ class DoctorFormTestCase(TestCase):
 		self.assertEqual(response.status_code, 200)
 
 		data = json.loads(response.content)
+
+		print(data)
+
 		self.assertEqual(len(data), 2)
 
 
-	def test_get_doctors(self):
+	def test_get_doctor(self):
 		""" Get 1 doctor from a database """
 
 		doctorA = Doctor(first_name="Joe", last_name= "Alpha", email= "Janderson@gmail.com")
@@ -57,16 +61,21 @@ class DoctorFormTestCase(TestCase):
 		doctorA.save()
 		doctorB.save()
 
-		response = self.client.get("/doctors/1")
+		response = self.client.get("/doctors/1/")
 
 		self.assertEqual(response.status_code, 200)
 
 		data = json.loads(response.content)
 
-		print(data)
-		
-		self.assertEqual(len(data), 1)
-		self.assertEqual(data.first_name, "Joe")
+		print(data['first_name'])
+
+		self.assertEqual(len(data), 3)
+
+		self.assertEqual(data['first_name'], "Joe")
+
+
+
+
 
 
 

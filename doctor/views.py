@@ -78,7 +78,6 @@ def index(request):
 	return render(request, 'doctor/index.html', context)
 
 
-
 def doctor(request, doctor_id):
 
 	try:
@@ -103,7 +102,7 @@ class JSONResponse(HttpResponse): #(what is this for????) <----
 @api_view(['GET', 'POST'])
 def doctor_list(request):
     """
-    List all code snippets, or create a new snippet.
+    List all doctors
     """
     if request.method == 'GET':
         doctors = Doctor.objects.all()
