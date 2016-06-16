@@ -118,8 +118,9 @@ def doctor_list(request):
         return JsonResponse(serializer.errors, status=400)
 
 @csrf_exempt
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def doctor_detail(request, pk):
+
     """
     Retrieve information on one doctor
     """
