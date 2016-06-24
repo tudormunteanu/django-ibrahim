@@ -10,6 +10,8 @@ from .forms import DoctorForm
 from .serializers import DoctorSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
 
 
 
@@ -31,7 +33,7 @@ def create_user(request):
 	return render(request, 'doctor/signup.html', context)
 
 
-
+@login_required
 def signup(request):
 
 	if request.method == 'POST':
@@ -59,11 +61,10 @@ def signin(request):
             login(request, user)
             # Redirect to a success page.
         else:
-            return render(request, 'doctor/signup.html', context)
+            return render(request, 'doctor/signup.html')
 
     else:
-    	pass
-        # Return an 'invalid login' error message.
+    	return render(request, 'doctor/login.html')
 
 
 

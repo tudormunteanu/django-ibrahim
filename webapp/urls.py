@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^patient/', include('patient.urls')),
     url(r'^doctor/signup/', include('doctor.urls')),
     url(r'^', include('doctor.urls')),
+    url(r'^', include('django.contrib.auth.urls'))
 
 ]

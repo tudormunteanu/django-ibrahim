@@ -10,7 +10,14 @@ class DoctorForm(ModelForm):
     	model = Doctor
     	fields = ['first_name', 'last_name', 'email']
 
-    	widgets = {'first_name': TextInput(attrs={'class': 'form-control'})
+    	widgets = {
+
+    	'first_name': TextInput(attrs={'class': 'form-control'}),
+
+		'last_name': TextInput(attrs={'class': 'form-control'}),
+
+		'email': TextInput(attrs={'class': 'form-control'}),
+
 
     	}
 

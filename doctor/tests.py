@@ -61,11 +61,11 @@ class DoctorFormTestCase(TestCase):
 		doctorA.save()
 		doctorB.save()
 
-		response = self.client.get("/doctors/1/")
+		response = self.client.get("/doctors/%s/" % doctorA.id)
 
 		self.assertEqual(response.status_code, 200)
 
-		data = json.loads(response.content)
+		data = json.loads(response.content.decode("utf-8"))
 
 		print(data['first_name'])
 
@@ -84,17 +84,11 @@ class DoctorFormTestCase(TestCase):
 		doctorA.save()
 		doctorB.save()
 
-		response = self.client.get("/doctors/4/")
+		response = self.client.get("/doctors/4975948/")
 
 		self.assertEqual(response.status_code, 404)
 
-		data = json.loads(response.content)
 
-		print(data)
-
-		self.assertEqual(len(data), 3)
-
-		self.assertEqual(data['first_name'], "Joe")
 
 
 
