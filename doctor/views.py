@@ -51,6 +51,7 @@ def signup(request):
 	return render(request, 'doctor/signup.html', context)
 
 
+
 def signin(request):
 
     username = request.POST['username']
@@ -65,6 +66,15 @@ def signin(request):
 
     else:
     	return render(request, 'doctor/login.html')
+
+
+@login_required
+def logout_user(request):
+
+    logout(request)
+
+    return render(request,'doctor/login.html')
+
 
 
 
