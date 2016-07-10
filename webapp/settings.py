@@ -85,13 +85,15 @@ WSGI_APPLICATION = 'webapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
+
+#postgres://yheadcwbqkihkw:SakLIDp5CGgs7MkYxHn0-zl7dp@ec2-54-243-47-83.compute-1.amazonaws.com:5432/d3551jp4e4sgrt
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myproject',
-        'USER': 'ubuntu',
-        'PASSWORD': 'thinkful',
-        'HOST': 'localhost'
+        'NAME': 'd3551jp4e4sgrt',
+        'USER': 'yheadcwbqkihkw',
+        'PASSWORD': 'SakLIDp5CGgs7MkYxHn0-zl7dp',
+        'HOST': 'ec2-54-243-47-83.compute-1.amazonaws.com'
     }
 }
 
